@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class hitObstacles : MonoBehaviour
 {
@@ -12,17 +13,22 @@ public class hitObstacles : MonoBehaviour
 
     }
 
-    private void Awake()
+    public void OnCollisionEnter(Collision collision)
     {
-        hitObstacle = Instantiate(hitObstacle);
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "obstacle")
+        if(collision.gameObject.tag == "obstacle")
         {
             hitObstacle.Play();
         }
     }
+
+    public void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.tag == "obstacle")
+        {
+            SceneManager.LoadScene("SampleScene");
+        }
+    }
+
 
     // Update is called once per frame
     void Update()

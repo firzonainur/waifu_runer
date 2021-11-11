@@ -21,8 +21,11 @@ public class hitKoin : MonoBehaviour
         if (collision.gameObject.tag == "koin")
         {
             hitVoice.Play();
-            scoreMesh.GetComponent<skor>().m_skor += 1;
             Destroy(collision.gameObject);
+            scoreMesh.GetComponent<skor>().m_skor += 1;
+
+
+
         }
     }
 
