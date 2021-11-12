@@ -1,31 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class player : MonoBehaviour
 {
-    public float shotForce = 1000f; //kekuatan tembakan
-    public float moveSpeed = 10f; //kecepatan gerak horisontal
-    public float forwardSpeed = 10f; //kecepatan gerak maju
+    private string m_currentAnimation;
+    private Animator m_animator;
+    private Rigidbody rigid;
 
+    public float moveSpeed = 10f;
+    public float forwardSpeed = 20f;
+    public float animationSpeed = 1;
+    public float jumpAmount = 10f;
+
+    private bool isJumping = false;
     public bool canMove = true;
     public bool idle = false;
 
-    private string m_currentAnimation;
-    private Animator m_animator;
-
-    public float animationSpeed = 1;
-
     public Transform cameraTransform;
 
-    //variable untuk mouse pointer
-    [Range(0f, 10f)]
-    public float turnSpeed = 1f;
-
-    private bool isJumping = false;
-
-    private Rigidbody rigid;
-    public float jumpAmount;
+    public Vector3 offset;
 
     private void ChangeAnimationState(string animation, float speed)
     {
@@ -36,25 +28,57 @@ public class player : MonoBehaviour
         m_animator.speed = speed;
     }
 
-    // Start is called before the first frame update
+    private void moveForward(float speed)
+    {
+        Vector3 velocity = rigid.velocity;
+
+        if (transform.rotation.y == 0) velocity.z = speed;
+        else velocity.x = speed;
+
+        rigid.velocity = velocity;
+    }
+
+    private void moveHorizontal(float speed)
+    {
+        Vector3 velocity = rigid.velocity;
+
+        if (transform.rotation.y == 0) velocity.x = speed;
+        else velocity.z = -speed;
+
+        rigid.velocity = velocity;
+    }
+
+    private void stopHorizontal()
+    {
+        Vector3 velocity = rigid.velocity;
+        if (transform.rotation.y == 0) velocity.x = 0;
+        else velocity.z = 0;
+
+        rigid.velocity = velocity;
+    }
+
     void Start()
     {
         m_animator = gameObject.GetComponent<Animator>();
         rigid = gameObject.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        // h dan v adalah kendali dari  keyboard untuk AIM penembakan bola
-        float h = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed; //gerak kiri kanan
-        float v = Time.deltaTime * forwardSpeed; // gerak maju mundur
-
-        //update lokasi kamera untuk kendali AIM
         if (canMove)
         {
-            transform.Translate(new Vector3(h, 0f, v)); // gerak mouse
-            cameraTransform.Translate(new Vector3(h, 0f, v));
+            moveForward(forwardSpeed);
+            cameraTransform.position = new Vector3(transform.position.x + offset.x, transform.position.y + offset.y, transform.position.z + offset.z);
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                moveHorizontal(moveSpeed);
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                moveHorizontal(-moveSpeed);
+            }
+            else stopHorizontal();
         }
 
         if (idle)
@@ -67,7 +91,6 @@ public class player : MonoBehaviour
             isJumping = true;
             ChangeAnimationState("jump", animationSpeed);
             rigid.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
-            Camera.main.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
         }
     }
 

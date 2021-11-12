@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class hitObstacles : MonoBehaviour
 {
     public AudioSource hitObstacle;
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,21 +19,16 @@ public class hitObstacles : MonoBehaviour
         if(collision.gameObject.tag == "obstacle")
         {
             hitObstacle.Play();
+            StartCoroutine(WaitForSceneLoad());
         }
     }
 
-    public void OnCollisionExit(Collision collision)
+    private IEnumerator WaitForSceneLoad()
     {
-        if(collision.gameObject.tag == "obstacle")
-        {
-            SceneManager.LoadScene("SampleScene");
-        }
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("SampleScene");
+
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

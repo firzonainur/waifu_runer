@@ -16,16 +16,14 @@ public class hitKoin : MonoBehaviour
     {
         hitVoice = Instantiate(hitVoice);
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "koin")
         {
             hitVoice.Play();
             Destroy(collision.gameObject);
             scoreMesh.GetComponent<skor>().m_skor += 1;
-
-
-
         }
     }
 

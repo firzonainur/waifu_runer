@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class belok : MonoBehaviour
@@ -25,8 +23,8 @@ public class belok : MonoBehaviour
             Vector3 to = new Vector3(0, degrees, 0);
 
             Camera.main.transform.eulerAngles = to;
-            Camera.main.transform.position = new Vector3(-5.8f, 3.8f, 717.5f);
             other.gameObject.transform.eulerAngles = to;
+            other.gameObject.GetComponent<player>().offset = new Vector3(-9, 5, 0.3f);
         }
     }
 }

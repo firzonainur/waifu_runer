@@ -21,7 +21,7 @@ public class finish : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             other.gameObject.GetComponent<player>().idle = true;
-            other.gameObject.GetComponent<player>().canMove = false;
+            other.gameObject.GetComponent<player>().forwardSpeed = 0;
         }
     }
 }
